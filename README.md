@@ -2,7 +2,7 @@
 
 Wrapper library to use aws-serverless-express with Azure Functions
 
-This library is basically a refactor of the code from @pulumi (https://github.com/pulumi/pulumi-cloud/blob/master/azure/httpServer.ts) in a ready to use library
+This library is basically a refactor of the code from @pulumi in their pulumi-cloud project(https://github.com/pulumi/pulumi-cloud/blob/master/azure/httpServer.ts) in a ready to use library
 
 ## Installation
 
