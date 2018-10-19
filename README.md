@@ -12,7 +12,7 @@ npm install azure-aws-serverless-express --save
 
 ```javascript
 import express from 'express';
-import { azureFunctionHandler } from 'azure-aws-serverless-express';
+import azureFunctionHandler from 'azure-aws-serverless-express';
 
 const app = express();
 
