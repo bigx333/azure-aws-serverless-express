@@ -25,3 +25,8 @@ module.exports = azureFunctionHandler(app);
 $ curl http://localhost:7071/api/hello-world/
 Hello World!
 ```
+
+## Todo
+
+Check for more content-type edge cases
+Tests

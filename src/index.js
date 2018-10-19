@@ -5,25 +5,24 @@ export default function azureFunctionHandler(app) {
   const server = awsServerlessExpress.createServer(app, undefined, ['*/*']);
 
   return (context, req) => {
-    const path = url.parse(req.originalUrl).pathname.replace('/api', '');
-
-    // Azure automatically converts body to a JSON object if the content-type is application/json,
-    // since aws-serverless-express expects a raw object we convert it back to string before proxying it
-    if (req.headers['content-type'] === 'application/json')
-      req.body = JSON.stringify(req.body);
+    const path = url.parse(req.originalUrl).pathname;
 
     const event = {
       path: path,
       httpMethod: req.method,
       headers: req.headers || {},
       queryStringParameters: req.query || {},
-      body: req.body,
+      // Azure automatically converts body to a JSON object if the content-type is application/json,
+      // since aws-serverless-express expects a raw object we convert it back to string before proxying it
+      body:
+        req.headers['content-type'] === 'application/json'
+          ? JSON.stringify(req.body)
+          : req.body,
       isBase64Encoded: false
     };
 
     const awsContext = {
       succeed(awsResponse) {
-        // Copy values over.
         context.res.status = awsResponse.statusCode;
         context.res.body = Buffer.from(
           awsResponse.body,
@@ -31,10 +30,7 @@ export default function azureFunctionHandler(app) {
         );
         context.res.isRaw = true;
 
-        context.res.headers = {
-          ...context.res.headers,
-          ...awsResponse.headers
-        };
+        context.done();
       }
     };
     awsServerlessExpress.proxy(server, event, awsContext);
