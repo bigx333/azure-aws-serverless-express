@@ -1,8 +1,10 @@
 import awsServerlessExpress from 'aws-serverless-express';
 import url from 'url';
 
-export default function azureFunctionHandler(app) {
-  const server = awsServerlessExpress.createServer(app, undefined, ['*/*']);
+export default function azureFunctionHandler(app, binaryTypes) {
+  binaryTypes = binaryTypes || ['*/*'];
+  
+  const server = awsServerlessExpress.createServer(app, undefined, binaryTypes);
 
   return (context, req) => {
     const path = url.parse(req.originalUrl).pathname;
@@ -12,18 +14,14 @@ export default function azureFunctionHandler(app) {
       httpMethod: req.method,
       headers: req.headers || {},
       queryStringParameters: req.query || {},
-      // Azure automatically converts body to a JSON object if the content-type is application/json,
-      // since aws-serverless-express expects a raw object we convert it back to string before proxying it
-      body:
-        req.headers['content-type'] === 'application/json'
-          ? JSON.stringify(req.body)
-          : req.body,
+      body: req.rawBody
       isBase64Encoded: false
     };
 
     const awsContext = {
       succeed(awsResponse) {
         context.res.status = awsResponse.statusCode;
+        context.res.headers = awsResponse.headers;
         context.res.body = Buffer.from(
           awsResponse.body,
           awsResponse.isBase64Encoded ? 'base64' : 'utf8'
