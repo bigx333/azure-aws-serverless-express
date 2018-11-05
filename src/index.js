@@ -14,7 +14,7 @@ export default function azureFunctionHandler(app, binaryTypes) {
       httpMethod: req.method,
       headers: req.headers || {},
       queryStringParameters: req.query || {},
-      body: req.rawBody
+      body: req.rawBody,
       isBase64Encoded: false
     };
 
