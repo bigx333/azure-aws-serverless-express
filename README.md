@@ -11,12 +11,12 @@ npm install azure-aws-serverless-express --save
 ## Usage
 
 ```javascript
-import express from 'express';
-import azureFunctionHandler from 'azure-aws-serverless-express';
+const express = require('express');
+const azureFunctionHandler = require('azure-aws-serverless-express');
 
 const app = express();
 
-app.get('/hello-world/', (req, res) => res.send('Hello World!'));
+app.get('/api/hello-world/', (req, res) => res.send('Hello World!'));
 
 module.exports = azureFunctionHandler(app);
 ```
@@ -28,5 +28,4 @@ Hello World!
 
 ## Todo
 
-Check for more content-type edge cases
 Tests
