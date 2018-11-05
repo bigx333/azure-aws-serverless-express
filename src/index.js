@@ -14,12 +14,7 @@ export default function azureFunctionHandler(app, binaryTypes) {
       httpMethod: req.method,
       headers: req.headers || {},
       queryStringParameters: req.query || {},
-      // Azure automatically converts body to a JSON object if the content-type is application/json,
-      // since aws-serverless-express expects a raw object we convert it back to string before proxying it
-      body:
-        req.headers['content-type'] === 'application/json'
-          ? req.rawBody
-          : req.body,
+      body: req.rawBody
       isBase64Encoded: false
     };
 
