@@ -3,7 +3,7 @@ import url from 'url';
 
 export default function azureFunctionHandler(app, binaryTypes) {
   binaryTypes = binaryTypes || ['*/*'];
-  
+
   const server = awsServerlessExpress.createServer(app, undefined, binaryTypes);
 
   return (context, req) => {
@@ -21,7 +21,10 @@ export default function azureFunctionHandler(app, binaryTypes) {
     const awsContext = {
       succeed(awsResponse) {
         context.res.status = awsResponse.statusCode;
-        context.res.headers = awsResponse.headers;
+        context.res.headers = {
+          ...context.res.headers,
+          ...awsResponse.headers
+        };
         context.res.body = Buffer.from(
           awsResponse.body,
           awsResponse.isBase64Encoded ? 'base64' : 'utf8'
